@@ -1,7 +1,6 @@
 ﻿
 using System.Collections;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 /// <summary>
 /// Ctrl+K+C - закомментировать несколько строк , Ctrl+K+U раскомментировать несколько строк
