@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class AnimationStateMachine : MonoBehaviour
 {
-    private Rigidbody2D PlayerRb2D;
+    private Rigidbody2D playerRb2D;
     private Animator anim;
 
     private void Start()
     {
         
-        PlayerRb2D = GetComponent<Rigidbody2D>();
+        playerRb2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
 
@@ -35,11 +35,11 @@ public class AnimationStateMachine : MonoBehaviour
     {
         MovementState state;
 
-        if(PlayerRb2D.velocity.y > 0.1f)
+        if(playerRb2D.velocity.y > 0.1f)
         {
             state = MovementState.PLayerJump;
         }
-        else if (PlayerRb2D.velocity.y < -.1f)
+        else if (playerRb2D.velocity.y < -.1f)
         {
             state = MovementState.PLayerFall;
         }

@@ -175,11 +175,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4273599191326908032}
   jumpTime: 0.6
-  jumpPower: 7
+  jumpPower: 3
   jumpSpeed: 6
   jumpPowerMultiplier: -1.6
   wallJumpSpeed: 1
-  wallJumpPower: 9
+  wallJumpPower: 6
   wallCheckDistance: 0.17
   wallSlideSpeed: -1
   jumpableGround:

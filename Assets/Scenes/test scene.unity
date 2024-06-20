@@ -921,10 +921,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 4273599191326908032, guid: 1cea780be2b7f1547b1c4ab7414d0626,
+    - target: {fileID: 9162042545268221699, guid: 1cea780be2b7f1547b1c4ab7414d0626,
         type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      propertyPath: jumpTime
+      value: 3.76
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

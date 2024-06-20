@@ -1,6 +1,7 @@
 ﻿
 using System.Collections;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 /// <summary>
 /// Ctrl+K+C - закомментировать несколько строк , Ctrl+K+U раскомментировать несколько строк
@@ -11,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     
     private Vector2 playerPosition;
-    static public int playerLives = 3;
+    public static int PlayerLives = 3;
 
 
     [Header("Jump Settings")]
@@ -35,6 +36,10 @@ public class Player : MonoBehaviour
     private float jumpCounter;
     private Vector2 vecGravity;
 
+    private bool reverseWallJumping;
+    private bool wallJumping;
+    private bool reverseJumping;
+    private bool jumping;
     private bool isTouchingWall;
     private bool isWallSliding;
     private bool isJumping;
@@ -46,7 +51,9 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Collider2D coll;
     private Animator anim;
-    
+    private static readonly int Climbing = Animator.StringToHash("climbing");
+    private static readonly int Death = Animator.StringToHash("death");
+
     void Start()
     {
         
@@ -61,11 +68,41 @@ public class Player : MonoBehaviour
     
     void Update()
     {
-        
-        ClimbingAndJumpingFromWall();
-        WallJump();
-        Jump();
+        InputManager();
     }
+
+    void FixedUpdate()
+    {
+        Jump();
+        ReverseJump();
+        WallJump();
+        ReverseWallJump();
+        ClimbingAndJumpingFromWall();
+    }
+
+    private void InputManager()
+    {
+        if (Input.GetButtonDown("Jump") && IsGrounded() && canNormalJump)
+        {
+            jumping = true;
+        }
+
+        if (Input.GetButtonDown("Jump") && doubleJump && !IsGrounded())
+        {
+            reverseJumping = true;
+        }
+
+        if (Input.GetButtonDown("Jump") && isWallSliding)
+        {
+            wallJumping = true;
+        }
+
+        if (Input.GetButtonDown("Jump") && !isWallSliding && doubleWallJump)
+        {
+            reverseWallJumping = true;
+        }
+    }
+    
 
     private void JumpTimeController()
     {
@@ -73,7 +110,7 @@ public class Player : MonoBehaviour
         {
             jumpCounter += Time.deltaTime;
             if (jumpCounter > jumpTime) isJumping = false;
-            rb.velocity += vecGravity * jumpPowerMultiplier * Time.deltaTime;
+            rb.velocity += vecGravity * (jumpPowerMultiplier * Time.deltaTime);
 
         }
 
@@ -85,25 +122,16 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (IsGrounded() && Input.GetButtonDown("Jump") && canNormalJump)
+        if (jumping)
         {
-
             rb.velocity = new Vector2(jumpSpeed, jumpPower);
+            jumping = false;
             isJumping = true;
             jumpCounter = 0;
             doubleJump = true;
             Debug.Log("Jump");
-
-
         }
-
-        if (doubleJump && !IsGrounded())
-        {
-            ReverseJump();
-        }
-
         JumpTimeController();
-
     }
 
    
@@ -111,68 +139,54 @@ public class Player : MonoBehaviour
     private void  ReverseJump()
     {
 
-        if (Input.GetButtonDown("Jump"))
-       {
+        if (reverseJumping)
+        {
             rb.velocity = new Vector2(-jumpSpeed, jumpPower);
+            reverseJumping = false;
             doubleJump = false;
             isJumping = true;
             jumpCounter = 0;
             Debug.Log("ReverseJump");
-
-
-
         }
-
         JumpTimeController();
-
     }
 
+    
     private void WallJump()
     {
 
-        if (Input.GetButtonDown("Jump") && isWallSliding)
+        if ( wallJumping )
         {
 
             rb.velocity = new Vector2(wallJumpPower * -transform.localScale.x * wallJumpSpeed, wallJumpPower);
+            wallJumping = false;
             isJumping = true;
             jumpCounter = 0;
             doubleWallJump = true;
             Debug.Log("WallJump");
-            
-
-
         }
-
-        if(!isWallSliding && doubleWallJump)
-        {
-            ReverseWallJump();
-        }
-
         JumpTimeController();
     }
 
     private void ReverseWallJump()
     {
-
-        if( Input.GetButtonDown("Jump"))
+        if(reverseWallJumping)
         {
             rb.velocity = new Vector2(wallJumpPower * -transform.localScale.x * wallJumpSpeed, wallJumpPower);
+            reverseWallJumping = false;
             isJumping = true;
             jumpCounter = 0;
             doubleWallJump = false;
             Debug.Log("ReverseWallJump");
-            
         }
-
         JumpTimeController();
-
-
     }
 
     private void ClimbingAndJumpingFromWall()
     {
         
-        isTouchingWall = Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.right * transform.localScale.x, wallCheckDistance, wallLayer);
+        isTouchingWall = Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, 
+            Vector2.right * transform.localScale.x, wallCheckDistance, wallLayer);
         
         
         if(isTouchingWall && !IsGrounded() )
@@ -188,13 +202,13 @@ public class Player : MonoBehaviour
         if (isTouchingWall && !isJumping)
         {
             isWallSliding = true;
-            anim.SetBool("climbing", true);
+            anim.SetBool(Climbing, true);
 
         }
         else
         {
             isWallSliding = false;
-            anim.SetBool("climbing", false);
+            anim.SetBool(Climbing, false);
 
         }
 
@@ -222,7 +236,8 @@ public class Player : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
+        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f,
+            Vector2.down, .1f, jumpableGround);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -241,25 +256,25 @@ public class Player : MonoBehaviour
     }
     
 
-    public IEnumerator Respown(float duration)
+    private IEnumerator Respown(float duration)
     {
-        anim.SetBool("death", true);
+        anim.SetBool(Death, true);
         rb.simulated = false;
         yield return new WaitForSeconds(duration);
         CameraFollowY.playerIsAlive = false;
         transform.position = playerPosition;
-        playerLives--;
+        PlayerLives--;
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0f;
-        Debug.Log(playerLives);
-        anim.SetBool("death", false);
+        Debug.Log(PlayerLives);
+        anim.SetBool(Death, false);
         rb.simulated = true;
         
     }
 
     public void PlayerDeath()
     {
-        if(playerLives == 0)
+        if(PlayerLives == 0)
         {
             //animation
             playerPrefab.SetActive(false);

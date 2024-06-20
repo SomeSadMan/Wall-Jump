@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        playerLivesText.text = Player.playerLives.ToString();
+        playerLivesText.text = Player.PlayerLives.ToString();
         LoseGame();
         KillPlayer();
 
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
 
     private void KillPlayer()
     {
-        if(Player.playerLives == 0)
+        if(Player.PlayerLives == 0)
         {
             player.PlayerDeath();
             
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
 
     private void LoseGame()
     {
-        if (Player.playerLives == 0)
+        if (Player.PlayerLives == 0)
         {
             //загружает сцену 1 ( сцена экрана проигрыша)
             SceneManager.LoadScene(1);
