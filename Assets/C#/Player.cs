@@ -2,9 +2,6 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Ctrl+K+C - закомментировать несколько строк , Ctrl+K+U раскомментировать несколько строк
-/// </summary>
 
 public class Player : MonoBehaviour
 {
@@ -56,10 +53,11 @@ public class Player : MonoBehaviour
     void Start()
     {
         
-        anim = GetComponent<Animator>();
+        
         playerPosition = transform.position;
         canNormalJump = true;
         vecGravity = new Vector2(0, Physics2D.gravity.y);
+        anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<Collider2D>();
     }
@@ -96,7 +94,7 @@ public class Player : MonoBehaviour
             wallJumping = true;
         }
 
-        if (Input.GetButtonDown("Jump") && !isWallSliding && doubleWallJump)
+        if (Input.GetButtonDown("Jump") && !isWallSliding && doubleWallJump && !IsGrounded())
         {
             reverseWallJumping = true;
         }
@@ -186,6 +184,7 @@ public class Player : MonoBehaviour
         
         isTouchingWall = Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, 
             Vector2.right * transform.localScale.x, wallCheckDistance, wallLayer);
+        
         
         
         if(isTouchingWall && !IsGrounded() )

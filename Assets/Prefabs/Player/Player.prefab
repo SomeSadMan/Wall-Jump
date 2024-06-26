@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4273599191326908032}
-  jumpTime: 0.6
+  jumpTime: 0.5
   jumpPower: 3
   jumpSpeed: 6
   jumpPowerMultiplier: -1.6
