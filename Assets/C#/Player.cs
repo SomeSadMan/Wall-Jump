@@ -1,11 +1,13 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
+
 
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private Sprite[] sprites;
+    
     
     private Vector2 playerPosition;
     public static int PlayerLives = 3;
@@ -52,7 +54,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+
         
         playerPosition = transform.position;
         canNormalJump = true;
