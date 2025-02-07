@@ -1,4 +1,5 @@
 ﻿
+using System;
 using UnityEngine;
 using static States;
 
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour
     
     [SerializeField] private Sprite[] sprites;
     [SerializeField] private LayerMask jumpableGround;
+    [SerializeField] private LayerMask wallLayer;
     
     public  Rigidbody2D rb { get; set; }
     private BoxCollider2D coll;
@@ -44,12 +46,13 @@ public class Player : MonoBehaviour
     {
         InputsChecking();
         state.UpdateState(this);
-        Clinging();
+        
     }
 
     private void FixedUpdate()
     {
         FlagChecking();
+        
     }
     
     private void Flip(float direction) // пока можно оставить это , но потом надо будет переделать 
@@ -99,15 +102,21 @@ public class Player : MonoBehaviour
         return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f,
             Vector2.down, .1f, jumpableGround);
     }
-
-    public void Clinging()
-    {
-        float direction = transform.localScale.x;
-        RaycastHit2D hit = Physics2D.Raycast(rayPos.transform.position, Vector2.right * direction, 10f);
-        float distance = Mathf.Abs(hit.point.x - rayPos.transform.position.x);
-        Debug.Log(distance);
-        Debug.DrawRay(rayPos.transform.position, Vector2.right * direction, Color.red);
-        
-    }
     
+    private void OnCollisionEnter2D(Collision2D collision2D)
+    {
+        if (collision2D.gameObject.CompareTag("Wall"))
+        {
+            rb.drag = 50;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision2D)
+    {
+        if (collision2D.gameObject.CompareTag("Wall"))
+        {
+            rb.drag = 0;
+        }
+    }
+
 }
