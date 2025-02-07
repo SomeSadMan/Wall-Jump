@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
     private bool canDoubleJump;
     private bool wallJump;
     private bool reversedWallJump;
+    internal bool isSliding;
 
     private void Awake()
     {
@@ -80,7 +81,6 @@ public class Player : MonoBehaviour
     {
         if (jump)
         {
-            //state = MovementState.PLayerJump;
             Flip(1);
             movement.Jump(xVelocity,yVelocity);
             jump = false;
@@ -89,7 +89,6 @@ public class Player : MonoBehaviour
 
         if (doubleJump)
         {
-            //state = MovementState.PLayerJump;
             Flip(-1);
             movement.DoubleJump(xVelocity,yVelocity);
             doubleJump = false;
@@ -108,6 +107,7 @@ public class Player : MonoBehaviour
         if (collision2D.gameObject.CompareTag("Wall"))
         {
             rb.drag = 50;
+            isSliding = true;
         }
     }
 
@@ -116,6 +116,7 @@ public class Player : MonoBehaviour
         if (collision2D.gameObject.CompareTag("Wall"))
         {
             rb.drag = 0;
+            isSliding = false;
         }
     }
 

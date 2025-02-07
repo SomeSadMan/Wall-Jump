@@ -15,7 +15,12 @@ public class StateService:IState
 
     public void UpdateState(Player player)
     {
-        if(player.rb.velocity.y > 0.1f)
+        if (player.isSliding )
+        {
+            state = MovementState.PlayerSlide;
+            Debug.Log(state);
+        }
+        else if(player.rb.velocity.y > 0.1f)
         {
             state = MovementState.PLayerJump;
         }
@@ -27,6 +32,8 @@ public class StateService:IState
         {
             state = MovementState.PlayerIdle;
         }
+
+        
         
         anim.SetInteger("state", (int)state);
     }
