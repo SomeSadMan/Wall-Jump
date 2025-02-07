@@ -26,7 +26,7 @@ public class NextLevel : MonoBehaviour
     public void PlayAgain()
     {
         SceneManager.LoadScene(2);
-        Player.PlayerLives += 3;
+        
     }
 
 
