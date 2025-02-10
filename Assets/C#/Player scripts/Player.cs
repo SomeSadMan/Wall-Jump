@@ -9,8 +9,6 @@ public class Player : MonoBehaviour
 {
     private IMovable movement;
     private IState state;
-
-    [SerializeField] private GameObject rayPos;
     
     public void Initialize(IMovable movable, IState state)
     {
@@ -23,7 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask wallLayer;
     
     public  Rigidbody2D rb { get; set; }
-    private BoxCollider2D coll;
+    public BoxCollider2D coll { get; set; }
     
     [Header("Jump Settings")]
     [SerializeField] private float yVelocity;
@@ -35,7 +33,7 @@ public class Player : MonoBehaviour
     private bool canDoubleJump;
     private bool wallJump;
     private bool reversedWallJump;
-    internal bool isSliding;
+    internal bool IsSliding;
 
     private void Awake()
     {
@@ -71,10 +69,15 @@ public class Player : MonoBehaviour
             jump = true;
         }
 
-        if (Input.GetButtonDown("Jump") && canDoubleJump && !IsGrounded())
+        if (Input.GetButtonDown("Jump") && canDoubleJump && !IsGrounded() && !IsSliding)
         {
             doubleJump = true;
         }
+        if (Input.GetButtonDown("Jump") && IsSliding && !IsGrounded())
+        {
+            wallJump = true;
+        }
+        
     }
     
     private void FlagChecking()
@@ -90,9 +93,16 @@ public class Player : MonoBehaviour
         if (doubleJump)
         {
             Flip(-1);
-            movement.DoubleJump(xVelocity,yVelocity);
+            movement.Jump(xVelocity,yVelocity);
             doubleJump = false;
             canDoubleJump = false;
+        }
+    
+        if (wallJump)
+        {
+            movement.WallJump(xVelocity,yVelocity);
+            wallJump = false;
+            IsSliding = false;
         }
     }
 
@@ -107,7 +117,7 @@ public class Player : MonoBehaviour
         if (collision2D.gameObject.CompareTag("Wall"))
         {
             rb.drag = 50;
-            isSliding = true;
+            IsSliding = true;
         }
     }
 
@@ -116,7 +126,7 @@ public class Player : MonoBehaviour
         if (collision2D.gameObject.CompareTag("Wall"))
         {
             rb.drag = 0;
-            isSliding = false;
+            IsSliding = false;
         }
     }
 

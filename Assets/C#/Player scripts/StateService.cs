@@ -15,7 +15,7 @@ public class StateService:IState
 
     public void UpdateState(Player player)
     {
-        if (player.isSliding )
+        if (player.IsSliding )
         {
             state = MovementState.PlayerSlide;
             Debug.Log(state);

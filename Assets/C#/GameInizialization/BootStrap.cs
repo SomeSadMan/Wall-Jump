@@ -9,7 +9,7 @@ public class BootStrap : MonoBehaviour
 
     private void Start()
     {
-        movement = new MovementService(player.rb);
+        movement = new MovementService(player.rb, player.transform);
         state = new StateService(player);
         player.Initialize(movement, state);
     }
