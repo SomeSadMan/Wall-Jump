@@ -118,7 +118,7 @@ public class Player : MonoBehaviour
         
         if (doubleWallJump)
         {
-            movement.WallJump(wallXvelocity,wallYvelocity);
+            movement.WallJump(-wallXvelocity,wallYvelocity);
             doubleWallJump = false;
             canDoubleWallJump = false;
         }
