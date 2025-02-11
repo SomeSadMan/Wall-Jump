@@ -23,17 +23,23 @@ public class Player : MonoBehaviour
     public  Rigidbody2D rb { get; set; }
     public BoxCollider2D coll { get; set; }
     
-    [Header("Jump Settings")]
+    [Header("Simple Jump Settings")]
     [SerializeField] private float yVelocity;
     [SerializeField] private float xVelocity;
+    
+    [Header("Wall Jump Settings")]
+    [SerializeField] private float wallXvelocity;
+    [SerializeField] private float wallYvelocity;
 
     //=========================FLAGS========================\\
     private bool jump;
     private bool doubleJump;
     private bool canDoubleJump;
     private bool wallJump;
-    private bool reversedWallJump;
-    internal bool IsSliding;
+    private bool doubleWallJump;
+    private bool canDoubleWallJump;
+    internal bool IsSliding; 
+    //=========================FLAGS========================//
 
     private void Awake()
     {
@@ -77,6 +83,10 @@ public class Player : MonoBehaviour
         {
             wallJump = true;
         }
+        if (Input.GetButtonDown("Jump") && !IsSliding && !IsGrounded() && canDoubleWallJump)
+        {
+            doubleWallJump = true;
+        }
         
     }
     
@@ -100,9 +110,17 @@ public class Player : MonoBehaviour
     
         if (wallJump)
         {
-            movement.WallJump(xVelocity,yVelocity);
+            movement.WallJump(wallXvelocity,wallYvelocity);
             wallJump = false;
             IsSliding = false;
+            canDoubleWallJump = true;
+        }
+        
+        if (doubleWallJump)
+        {
+            movement.WallJump(wallXvelocity,wallYvelocity);
+            doubleWallJump = false;
+            canDoubleWallJump = false;
         }
     }
 
@@ -118,6 +136,8 @@ public class Player : MonoBehaviour
         {
             rb.drag = 50;
             IsSliding = true;
+            rb.velocity = Vector2.zero;
+            Debug.Log($"{rb.velocity}");
         }
     }
 

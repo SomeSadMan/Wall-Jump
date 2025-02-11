@@ -204,7 +204,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1092e4a8d0e51ac42aed6e5bc72a7b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayPos: {fileID: 2693578009380991918}
   sprites:
   - {fileID: 9045071022282005538, guid: e52892d4f52c3114b8cdf7f7dd42bf5e, type: 3}
   - {fileID: 9045071022282005538, guid: e52892d4f52c3114b8cdf7f7dd42bf5e, type: 3}
@@ -214,8 +213,10 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
-  yVelocity: 10
-  xVelocity: 5
+  yVelocity: 15
+  xVelocity: 8
+  wallXvelocity: 8
+  wallYvelocity: 17
 --- !u!95 &791337937740346072
 Animator:
   serializedVersion: 5
